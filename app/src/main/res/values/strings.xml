@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">FirebaseLoginRealtime</string>
+
+    <string name="google_web_client_id">1090010418915-ularfjglpcque59qmnrcpglqucmn5rkm.apps.googleusercontent.com</string>
+
+    <string name="signin">Sign in with email and password</string>
+
+    <string name="signup_success">Account is created.</string>
+    <string name="signup_fail">Fail to create account.</string>
+    <string name="signin_success">Signed in.</string>
+    <string name="signin_fail">Fail to sign in.</string>
+
+    <string name="connect_google_fail">Fail to connect to Google.</string>
+
+    <string name="user">Hi, %s!</string>
+    <string name="online">Online users: %d</string>
+    <string name="signout">Sign out</string>
+    <string name="exit">tap 2 times to exit</string>
+
 </resources>
