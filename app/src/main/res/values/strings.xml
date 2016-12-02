@@ -15,6 +15,6 @@
     <string name="user">Hi, %s!</string>
     <string name="online">Online users: %d</string>
     <string name="signout">Sign out</string>
-    <string name="exit">tap 2 times to exit</string>
+    <string name="exit">tap 2 times to sign out and exit</string>
 
 </resources>
