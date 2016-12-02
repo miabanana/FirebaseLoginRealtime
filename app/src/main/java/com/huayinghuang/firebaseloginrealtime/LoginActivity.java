@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class LoginActivity extends FirebaseSetupActivity implements View.OnClickListener {
     private static final int GOOGLE = 100;
@@ -40,6 +41,7 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
         switch (view.getId()) {
             case R.id.login:
                 if (isFirebaseUserNull()) {
+                    signUpMail("test@gmail.com", "testtest");
                     signInMail("test@gmail.com", "testtest");
                 } else {
                     signOutFirebase();
@@ -71,12 +73,11 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
                     String familyName = account != null ? account.getFamilyName() : null;
                     Uri photoUri = account != null ? account.getPhotoUrl() : null;
 
-                    UserData.getInstance().setId(id).setIdToken(idToken).setMail(mail)
+                    UserData.getInstance()
+                            .setId(id)
+                            .setIdToken(idToken).setMail(mail)
                             .setDisplayName(name).setGivenName(givenName).setFamilyName(familyName)
                             .setPhotoUri(photoUri);
-                    Log.d(TAG, "userId = "+id+"\n userIdToken = "+idToken
-                            +"\nuserMail = "+mail +"\nuserGivenName = "+givenName
-                            +"\nuserFamilyName = "+familyName +"\nphotoUri = "+photoUri);
 
                     startActivity(new Intent(getApplicationContext(), RealtimeDBActivity.class));
                 } else {
@@ -115,7 +116,9 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(getApplicationContext(), R.string.connect_google_fail, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                R.string.connect_google_fail,
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -146,20 +149,21 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
                 });
     }
 
-    private void signInMail(final String mailAddr, String pwd) {
-        //sign up new user
+    private void signUpMail(String mailAddr, String pwd) {
         getFirebaseAuth().createUserWithEmailAndPassword(mailAddr, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "Sign up succeed? " + task.isSuccessful());
-                        String msg = task.isSuccessful() ?
-                                getString(R.string.signup_success) : getString(R.string.signup_fail);
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, getString(R.string.signup_success));
+                        } else {
+                            Log.d(TAG, getString(R.string.signup_fail));
+                        }
                     }
                 });
+    }
 
-        //sign in old user
+    private void signInMail(final String mailAddr, String pwd) {
         getFirebaseAuth().signInWithEmailAndPassword(mailAddr, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -170,11 +174,34 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
                         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
                         if (task.isSuccessful()) {
-                            UserData.getInstance().setDisplayName(mailAddr);
-                            startActivity(new Intent(getApplicationContext(), RealtimeDBActivity.class));
+                            updateProfile("Test User", Uri.parse("http://sdl-stickershop.line.naver.jp" +
+                                    "/products/0/0/1/6090/iphone/main@2x.png"));
                         }
                     }
                 });
+    }
+
+    private void updateProfile(String name, Uri photoUri) {
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name).setPhotoUri(photoUri).build();
+        getFirebaseUser().updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "update profile success!\nname = "+getFirebaseUser().getDisplayName()
+                            +"\nemail = "+getFirebaseUser().getEmail()
+                            +"\nphoto uri = "+getFirebaseUser().getPhotoUrl()
+                            +"\nUid = "+getFirebaseUser().getUid());
+                    UserData.getInstance().setDisplayName(getFirebaseUser().getDisplayName())
+                            .setMail(getFirebaseUser().getEmail())
+                            .setPhotoUri(getFirebaseUser().getPhotoUrl());
+
+                    startActivity(new Intent(getApplicationContext(), RealtimeDBActivity.class));
+                } else {
+                    Log.d(TAG, "fail to update profile");
+                }
+            }
+        });
     }
 
 }

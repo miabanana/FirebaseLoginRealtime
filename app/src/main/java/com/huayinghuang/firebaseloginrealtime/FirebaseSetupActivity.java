@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by miahuang on 2016/11/22.
@@ -30,7 +32,6 @@ public class FirebaseSetupActivity extends AppCompatActivity {
                 mUser = firebaseAuth.getCurrentUser();
                 if (mUser != null) {
                     Log.d(TAG,"onAuthStateChanged:signed_in: " + mUser.getUid());
-
                 } else {
                     Log.d(TAG,"onAuthStateChanged:signed_out");
                 }
@@ -70,7 +71,15 @@ public class FirebaseSetupActivity extends AppCompatActivity {
         return mUser == null;
     }
 
+    private void writeDatabase(int value) {
+        String DB_ONLINE_USER = "online_user/num";
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference reference = mDatabase.getReference(DB_ONLINE_USER);
+        reference.setValue(value);
+    }
+
     public void signOutFirebase() {
+        writeDatabase(-1);
         UserData.getInstance().clearAll();
         mAuth.signOut();
     }

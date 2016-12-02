@@ -18,11 +18,11 @@ class UserData {
 
     private UserData() {}
 
-    static UserData getInstance() {
+    public static UserData getInstance() {
         return userData;
     }
 
-    void clearAll() {
+    public void clearAll() {
         id = null;
         idToken = null;
         mail = null;
