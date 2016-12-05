@@ -13,9 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -97,20 +95,20 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.google_web_client_id))
                 .requestEmail()
-                .requestScopes(
-                        new Scope(Scopes.PLUS_LOGIN), //所屬年齡層，使用語言
-                        new Scope(Scopes.APP_STATE), //查看及管理此應用程式的資料
-                        new Scope(Scopes.CLOUD_SAVE), //查看及管理Google雲端資料儲存庫行動版的資料
-                        new Scope(Scopes.DRIVE_APPFOLDER), //查看及管理此API在Google雲端硬碟中的設定資料
-                        new Scope(Scopes.DRIVE_FILE), //查看及管理您透過這個應用程式開啟或建立的Google雲端硬碟檔案和資料夾
-                        new Scope(Scopes.FITNESS_ACTIVITY_READ), //查看您的Google Fit活動資訊
-                        new Scope(Scopes.FITNESS_LOCATION_READ_WRITE), //查看及儲存您的Google Fit位置資料
-                        new Scope(Scopes.GAMES), //分享您的Google+個人資料訊息，以及查看和管理遊戲活動
-                        new Scope(Scopes.PLUS_ME), //不需權限
-                        new Scope(Scopes.PLUS_MOMENTS), //不需
-                        new Scope(Scopes.PROFILE), //不需
-                        new Scope(Scopes.EMAIL) //不需
-                )
+//                .requestScopes(
+//                        new Scope(Scopes.PLUS_LOGIN), //所屬年齡層，使用語言
+//                        new Scope(Scopes.APP_STATE), //查看及管理此應用程式的資料
+//                        new Scope(Scopes.CLOUD_SAVE), //查看及管理Google雲端資料儲存庫行動版的資料
+//                        new Scope(Scopes.DRIVE_APPFOLDER), //查看及管理此API在Google雲端硬碟中的設定資料
+//                        new Scope(Scopes.DRIVE_FILE), //查看及管理您透過這個應用程式開啟或建立的Google雲端硬碟檔案和資料夾
+//                        new Scope(Scopes.FITNESS_ACTIVITY_READ), //查看您的Google Fit活動資訊
+//                        new Scope(Scopes.FITNESS_LOCATION_READ_WRITE), //查看及儲存您的Google Fit位置資料
+//                        new Scope(Scopes.GAMES), //分享您的Google+個人資料訊息，以及查看和管理遊戲活動
+//                        new Scope(Scopes.PLUS_ME), //不需權限
+//                        new Scope(Scopes.PLUS_MOMENTS), //不需
+//                        new Scope(Scopes.PROFILE), //不需
+//                        new Scope(Scopes.EMAIL) //不需
+//                )
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
