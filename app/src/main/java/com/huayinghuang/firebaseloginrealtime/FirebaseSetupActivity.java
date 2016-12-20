@@ -36,20 +36,6 @@ public class FirebaseSetupActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
-    protected void updateNumbers(final TextView textView) {
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if(msg.what == 0) {
-                    if (textView != null) {
-                        textView.setText(String.format(getString(R.string.online), (int) msg.obj));
-                    }
-                }
-            }
-        };
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +69,20 @@ public class FirebaseSetupActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    protected void updateNumbers(final TextView textView) {
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what == 0) {
+                    if (textView != null) {
+                        textView.setText(String.format(getString(R.string.online), (int) msg.obj));
+                    }
+                }
+            }
+        };
     }
 
     public FirebaseAuth getFirebaseAuth() {
@@ -131,10 +131,7 @@ public class FirebaseSetupActivity extends AppCompatActivity {
                     final int num = dataSnapshot.getValue(Integer.class);
                     Log.d(TAG, "Realtime DB changed value = " + num);
                     final Message message = mHandler.obtainMessage(0,num);
-//                    message.what = 0;
-//                    message.arg1 = num;
                     message.sendToTarget();
-//                myHandler.sendMessage(message);
                 }
 
                 @Override
@@ -150,4 +147,5 @@ public class FirebaseSetupActivity extends AppCompatActivity {
         UserData.getInstance().clearAll();
         mAuth.signOut();
     }
+
 }

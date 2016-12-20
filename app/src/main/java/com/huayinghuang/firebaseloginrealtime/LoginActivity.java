@@ -142,7 +142,6 @@ public class LoginActivity extends FirebaseSetupActivity implements View.OnClick
                                     getString(R.string.signin_fail),
                                     Toast.LENGTH_SHORT).show();
                         }
-                        // ...
                     }
                 });
     }
